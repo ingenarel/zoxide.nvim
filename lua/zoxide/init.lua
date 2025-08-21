@@ -1,15 +1,18 @@
-local m = { lastZoxideExecData = {} }
+local m = {}
 
 function m.z(query)
-	m.lastZoxideExecData = vim.system({ "zoxide", "query", query }, {}, function()
+	local lastZoxideExecData = {}
+	lastZoxideExecData = vim.system({ "zoxide", "query", query }, {}, function()
 		vim.schedule(function()
-			m.changeDir()
+			m.changeDir(lastZoxideExecData[1])
 		end)
-	end)
+	end)._state.stdout_data
 end
 
 function m.changeDir(query)
-	vim.cmd.cd(string.sub(m.lastZoxideExecData._state.stdout_data[1], 1, -2))
+	if query then
+		vim.cmd.cd(string.sub(query, 1, -2))
+	end
 end
 
 function m.setup()
