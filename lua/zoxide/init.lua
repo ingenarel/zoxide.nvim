@@ -1,5 +1,11 @@
 local m = {}
 
+local function strip(str)
+	str = string.gsub(str, "^%s+", "")
+	str = string.gsub(str, "%s+$", "")
+	return str
+end
+
 ---@param opts table|string
 function m.z(opts)
 	if type(opts) == "string" then
@@ -15,7 +21,7 @@ function m.z(opts)
 	local lastZoxideExecData = {}
 	lastZoxideExecData = vim.system({ "zoxide", "query", opts[1] }, {}, function()
 		vim.schedule(function()
-			vim.cmd.cd(string.sub(lastZoxideExecData[1], 1, -2))
+			vim.cmd.cd(strip(lastZoxideExecData[1]))
 		end)
 	end)._state.stdout_data
 end
