@@ -1,19 +1,23 @@
 local m = {}
 
+---@param opts table|string
 function m.z(opts)
-	opts = opts or {}
+	if type(opts) == "string" then
+		local tmp = opts
+		opts = {}
+		opts[1] = tmp
+	elseif type(opts) ~= "table" then
+		error("opts is neither a table nor a string")
+	end
+	if type(opts[1]) ~= "string" or opts[1] == "" then
+		error("opts[1] isn't a non empty string")
+	end
 	local lastZoxideExecData = {}
 	lastZoxideExecData = vim.system({ "zoxide", "query", opts[1] }, {}, function()
 		vim.schedule(function()
-			m.changeDir(lastZoxideExecData[1])
+			vim.cmd.cd(string.sub(lastZoxideExecData[1], 1, -2))
 		end)
 	end)._state.stdout_data
-end
-
-function m.changeDir(query)
-	if query then
-		vim.cmd.cd(string.sub(query, 1, -2))
-	end
 end
 
 function m.setup()
