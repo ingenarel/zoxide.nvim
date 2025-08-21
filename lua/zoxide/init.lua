@@ -30,36 +30,37 @@ function m.z(opts)
 		vim.schedule(function()
 			if opts.list then
 				--TODO: make this a telescope module later
-				local pickers = require("telescope.pickers")
-				local finders = require("telescope.finders")
-				local conf = require("telescope.config").values
-				local actions = require("telescope.actions")
-				local action_state = require("telescope.actions.state")
-
-				local dirData = {}
-				for _, value in ipairs(lastZoxideExecData) do
-					for line in vim.gsplit(value, "\n", { trimempty = true }) do
-						table.insert(dirData, strip(line))
+				if vim.fn.exists("g:loaded_telescope") == 1 then
+					local actions = require("telescope.actions")
+					local dirData = {}
+					for _, value in ipairs(lastZoxideExecData) do
+						for line in vim.gsplit(value, "\n", { trimempty = true }) do
+							table.insert(dirData, strip(line))
+						end
 					end
+					require("telescope.pickers")
+						.new({}, {
+							prompt_title = "zoxide",
+							sorter = require("telescope.config").values.generic_sorter(nil),
+							finder = require("telescope.finders").new_table({ results = dirData }),
+							attach_mappings = function(prompt_bufnr, map)
+								actions.select_default:replace(function()
+									actions.close(prompt_bufnr)
+									--TODO: figure out if there is a way to influence the score instead of printing out the
+									--score and then doing string manupulation like this
+									local dir = string.gsub(
+										require("telescope.actions.state").get_selected_entry()[1],
+										"^[%d.]+%s+",
+										""
+									)
+									vim.cmd.cd(dir)
+									vim.cmd.pwd()
+								end)
+								return true
+							end,
+						})
+						:find()
 				end
-				pickers
-					.new({}, {
-						prompt_title = "zoxide",
-						sorter = conf.generic_sorter(nil),
-						finder = finders.new_table({ results = dirData }),
-						attach_mappings = function(prompt_bufnr, map)
-							actions.select_default:replace(function()
-								actions.close(prompt_bufnr)
-								--TODO: figure out if there is a way to influence the score instead of printing out the
-								--score and then doing string manupulation like this
-								local dir = string.gsub(action_state.get_selected_entry()[1], "^[%d.]+%s+", "")
-								vim.cmd.cd(dir)
-								vim.cmd.pwd()
-							end)
-							return true
-						end,
-					})
-					:find()
 			else
 				vim.cmd.cd(strip(lastZoxideExecData[1]))
 			end
