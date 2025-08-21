@@ -15,13 +15,54 @@ function m.z(opts)
 	elseif type(opts) ~= "table" then
 		error("opts is neither a table nor a string")
 	end
-	if type(opts[1]) ~= "string" or opts[1] == "" then
+	if not opts.list and (type(opts[1]) ~= "string" or opts[1] == "") then
 		error("opts[1] isn't a non empty string")
 	end
+
+	local zoxideCommand = { "zoxide", "query" }
+	if opts.list then
+		table.insert(zoxideCommand, "-l")
+		table.insert(zoxideCommand, "-s")
+	end
+	table.insert(zoxideCommand, opts[1])
 	local lastZoxideExecData = {}
-	lastZoxideExecData = vim.system({ "zoxide", "query", opts[1] }, {}, function()
+	lastZoxideExecData = vim.system(zoxideCommand, {}, function()
 		vim.schedule(function()
-			vim.cmd.cd(strip(lastZoxideExecData[1]))
+			if opts.list then
+				--TODO: make this a telescope module later
+				local pickers = require("telescope.pickers")
+				local finders = require("telescope.finders")
+				local conf = require("telescope.config").values
+				local actions = require("telescope.actions")
+				local action_state = require("telescope.actions.state")
+
+				local dirData = {}
+				for _, value in ipairs(lastZoxideExecData) do
+					for line in vim.gsplit(value, "\n", { trimempty = true }) do
+						table.insert(dirData, strip(line))
+					end
+				end
+				pickers
+					.new({}, {
+						prompt_title = "zoxide",
+						sorter = conf.generic_sorter(nil),
+						finder = finders.new_table({ results = dirData }),
+						attach_mappings = function(prompt_bufnr, map)
+							actions.select_default:replace(function()
+								actions.close(prompt_bufnr)
+								--TODO: figure out if there is a way to influence the score instead of printing out the
+								--score and then doing string manupulation like this
+								local dir = string.gsub(action_state.get_selected_entry()[1], "^[%d.]+%s+", "")
+								vim.cmd.cd(dir)
+								vim.cmd.pwd()
+							end)
+							return true
+						end,
+					})
+					:find()
+			else
+				vim.cmd.cd(strip(lastZoxideExecData[1]))
+			end
 		end)
 	end)._state.stdout_data
 end
@@ -29,6 +70,9 @@ end
 function m.setup()
 	vim.api.nvim_create_user_command("Z", function(opts)
 		m.z({ opts.args })
+	end, { nargs = "?" })
+	vim.api.nvim_create_user_command("Zf", function(opts)
+		m.z({ opts.args, list = true })
 	end, { nargs = "?" })
 end
 
