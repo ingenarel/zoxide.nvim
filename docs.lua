@@ -8,11 +8,11 @@
 ---@field treeCommand string[]?
 
 ---@class zoxide.setupOpts
----@field lsd zoxide.setupOpts.lsd
+---@field lsd zoxide.setupOpts.lsd?
 
 ---@alias lsdChoice "always"|"auto"|"never"|nil
 ---@class zoxide.setupOpts.lsd
 ---@field color lsdChoice
 ---@field icon lsdChoice
 ---@field iconTheme "fancy"|"unicode"|nil
----@field depth integer
+---@field depth integer?
