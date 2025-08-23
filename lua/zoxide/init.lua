@@ -43,7 +43,7 @@ function m.z(opts)
                             prompt_title = "zoxide",
                             sorter = require("telescope.config").values.generic_sorter(nil),
                             finder = require("telescope.finders").new_table { results = dirData },
-                            attach_mappings = function(prompt_bufnr, map)
+                            attach_mappings = function(prompt_bufnr)
                                 actions.select_default:replace(function()
                                     actions.close(prompt_bufnr)
                                     --TODO: figure out if there is a way to influence the score instead of printing out the
