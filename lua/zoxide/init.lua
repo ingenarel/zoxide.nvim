@@ -56,8 +56,20 @@ function m.z(opts)
 									vim.cmd.cd(dir)
 									vim.cmd.pwd()
 								end)
+
 								return true
 							end,
+							previewer = require("telescope.previewers").new_termopen_previewer({
+								get_command = function(entry)
+									local dir = string.gsub(entry[1], "^[%d.]+%s+", "")
+									local tmpCommand = {}
+									for _, command in ipairs(m.treeCommand) do
+										table.insert(tmpCommand, command)
+									end
+									table.insert(tmpCommand, dir)
+									return tmpCommand
+								end,
+							}),
 						})
 						:find()
 				end
@@ -68,13 +80,48 @@ function m.z(opts)
 	end)._state.stdout_data
 end
 
-function m.setup()
+function m.setup(setupOpts)
 	vim.api.nvim_create_user_command("Z", function(opts)
 		m.z({ opts.args })
 	end, { nargs = "?" })
 	vim.api.nvim_create_user_command("Zf", function(opts)
 		m.z({ opts.args, list = true })
 	end, { nargs = "?" })
+
+	setupOpts.lsd = {}
+	---@alias lsdChoice "always"|"auto"|"never"|nil
+	---@type lsdChoice
+	setupOpts.lsd.color = setupOpts.lsd.color
+	---@type lsdChoice
+	setupOpts.lsd.icon = setupOpts.lsd.icon
+	---@type "fancy"|"unicode"|nil
+	setupOpts.lsd.iconTheme = setupOpts.lsd.iconTheme or "fancy"
+	for _, value in ipairs({ "color", "icon" }) do
+		if not setupOpts.lsd[value] then
+			local term = string.format("%s", os.getenv("TERM"))
+			if os.getenv("WAYLAND_DISPLAY") or string.find(term, "256") or string.find(term, "xterm") then
+				setupOpts.lsd[value] = "always"
+			else
+				setupOpts.lsd[value] = "auto"
+			end
+		end
+	end
+	setupOpts.treeCommands = setupOpts.treeCommands
+		or {
+			{
+				"lsd",
+				"--tree",
+				"--color=" .. setupOpts.lsd.color,
+				"--icon=" .. setupOpts.lsd.icon,
+				"--icon-theme=" .. setupOpts.lsd.iconTheme,
+			},
+		}
+	for _, command in pairs(setupOpts.treeCommands) do
+		if vim.fn.executable(command[1]) == 1 then
+			m.treeCommand = command
+			break
+		end
+	end
 end
 
 return m
