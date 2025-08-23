@@ -1,20 +1,22 @@
 ---@type zoxide
 local m = {
     setupOpts = {
+        depth = 4,
         lsd = {
             iconTheme = "fancy",
-            depth = 4,
             groupDirs = "last",
             ignorePattern = "",
         },
         tree = {
-            depth = 4,
             ignorePattern = ".git",
         },
         treeCommands = nil,
         treeCommand = nil,
     },
 }
+
+m.setupOpts.lsd.depth = m.setupOpts.depth
+m.setupOpts.tree.depth = m.setupOpts.depth
 
 local function strip(str)
     str = string.gsub(str, "^%s+", "")

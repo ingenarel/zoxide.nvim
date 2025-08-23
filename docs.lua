@@ -10,6 +10,7 @@
 ---@field tree zoxide.setupOpts.tree?
 ---@field treeCommands string[][]?
 ---@field treeCommand string[]?
+---@field depth integer?
 
 ---@alias lsdChoice "always"|"auto"|"never"|nil
 ---@class zoxide.setupOpts.lsd
