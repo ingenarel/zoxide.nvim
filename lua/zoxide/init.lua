@@ -1,4 +1,16 @@
-local m = {}
+---@type zoxide
+local m = {
+    setupOpts = {
+        lsd = {
+            color = nil,
+            icon = nil,
+            iconTheme = "fancy",
+            depth = 4,
+        },
+        treeCommands = nil,
+        treeCommand = nil,
+    },
+}
 
 local function strip(str)
     str = string.gsub(str, "^%s+", "")
@@ -6,7 +18,20 @@ local function strip(str)
     return str
 end
 
----@param opts table|string
+local function tableUpdate(table1, table2)
+    for key, value in pairs(table2) do
+        local valueType = type(value)
+        if valueType == "table" then
+            if type(table1[key]) ~= "table" then
+                table1[key] = {}
+            end
+            tableUpdate(table1[key], value)
+        elseif valueType ~= nil then
+            table1[key] = value
+        end
+    end
+end
+
 function m.z(opts)
     if type(opts) == "string" then
         local tmp = opts
@@ -77,10 +102,13 @@ function m.z(opts)
                 vim.cmd.cd(strip(lastZoxideExecData[1]))
             end
         end)
+        ---@diagnostic disable-next-line: invisible
     end)._state.stdout_data
 end
 
 function m.setup(setupOpts)
+    tableUpdate(m.setupOpts, setupOpts)
+    setupOpts = m.setupOpts
     vim.api.nvim_create_user_command("Z", function(opts)
         m.z { opts.args }
     end, { nargs = "?" })
@@ -88,16 +116,6 @@ function m.setup(setupOpts)
         m.z { opts.args, list = true }
     end, { nargs = "?" })
 
-    setupOpts.lsd = {}
-    ---@alias lsdChoice "always"|"auto"|"never"|nil
-    ---@type lsdChoice
-    setupOpts.lsd.color = setupOpts.lsd.color
-    ---@type lsdChoice
-    setupOpts.lsd.icon = setupOpts.lsd.icon
-    ---@type "fancy"|"unicode"|nil
-    setupOpts.lsd.iconTheme = setupOpts.lsd.iconTheme or "fancy"
-    ---@type integer
-    setupOpts.lsd.depth = setupOpts.lsd.depth or 4
     for _, value in ipairs { "color", "icon" } do
         if not setupOpts.lsd[value] then
             local term = string.format("%s", os.getenv("TERM"))
