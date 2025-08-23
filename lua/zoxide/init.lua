@@ -96,6 +96,8 @@ function m.setup(setupOpts)
 	setupOpts.lsd.icon = setupOpts.lsd.icon
 	---@type "fancy"|"unicode"|nil
 	setupOpts.lsd.iconTheme = setupOpts.lsd.iconTheme or "fancy"
+	---@type integer
+	setupOpts.lsd.depth = setupOpts.lsd.depth or 4
 	for _, value in ipairs({ "color", "icon" }) do
 		if not setupOpts.lsd[value] then
 			local term = string.format("%s", os.getenv("TERM"))
@@ -114,6 +116,7 @@ function m.setup(setupOpts)
 				"--color=" .. setupOpts.lsd.color,
 				"--icon=" .. setupOpts.lsd.icon,
 				"--icon-theme=" .. setupOpts.lsd.iconTheme,
+				"--depth=" .. string.format("%d", setupOpts.lsd.depth),
 			},
 			{ "tree" },
 			{ "fd", "." },
