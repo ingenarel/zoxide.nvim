@@ -7,6 +7,7 @@
 
 ---@class zoxide.setupOpts
 ---@field lsd zoxide.setupOpts.lsd?
+---@field tree zoxide.setupOpts.tree?
 ---@field treeCommands string[][]?
 ---@field treeCommand string[]?
 
@@ -16,3 +17,7 @@
 ---@field icon lsdChoice
 ---@field iconTheme "fancy"|"unicode"|nil
 ---@field depth integer?
+
+---@class zoxide.setupOpts.tree
+---@field depth integer?
+---@field ignorePattern string?

@@ -5,6 +5,10 @@ local m = {
             iconTheme = "fancy",
             depth = 4,
         },
+        tree = {
+            depth = 4,
+            ignorePattern = ".git",
+        },
         treeCommands = nil,
         treeCommand = nil,
     },
@@ -134,7 +138,15 @@ function m.setup(setupOpts)
                 "--icon-theme=" .. setupOpts.lsd.iconTheme,
                 "--depth=" .. string.format("%d", setupOpts.lsd.depth),
             },
-            { "tree" },
+            {
+                "tree",
+                "-a",
+                "--gitignore",
+                "-L",
+                string.format("%d", setupOpts.tree.depth),
+                "-I",
+                setupOpts.tree.ignorePattern,
+            },
             { "fd", "." },
         }
     if not setupOpts.treeCommand then
