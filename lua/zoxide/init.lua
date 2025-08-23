@@ -2,8 +2,6 @@
 local m = {
     setupOpts = {
         lsd = {
-            color = nil,
-            icon = nil,
             iconTheme = "fancy",
             depth = 4,
         },
