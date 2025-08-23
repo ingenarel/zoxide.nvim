@@ -115,6 +115,8 @@ function m.setup(setupOpts)
 				"--icon=" .. setupOpts.lsd.icon,
 				"--icon-theme=" .. setupOpts.lsd.iconTheme,
 			},
+			{ "tree" },
+			{ "fd", "." },
 		}
 	for _, command in pairs(setupOpts.treeCommands) do
 		if vim.fn.executable(command[1]) == 1 then
