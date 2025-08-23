@@ -63,7 +63,7 @@ function m.z(opts)
                                 get_command = function(entry)
                                     local dir = string.gsub(entry[1], "^[%d.]+%s+", "")
                                     local tmpCommand = {}
-                                    for _, command in ipairs(m.treeCommand) do
+                                    for _, command in ipairs(m.setupOpts.treeCommand) do
                                         table.insert(tmpCommand, command)
                                     end
                                     table.insert(tmpCommand, dir)
@@ -123,7 +123,7 @@ function m.setup(setupOpts)
         }
     for _, command in pairs(setupOpts.treeCommands) do
         if vim.fn.executable(command[1]) == 1 then
-            m.treeCommand = command
+            setupOpts.treecommand = command
             break
         end
     end
