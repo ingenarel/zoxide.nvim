@@ -2,13 +2,13 @@
 
 ---@class zoxide
 ---@field setupOpts zoxide.setupOpts
----@field treeCommands string[][]?
 ---@field z fun(opts: { [1]: string, list: boolean?}|string)?
 ---@field setup fun(setupOpts: zoxide.setupOpts)|nil
----@field treeCommand string[]?
 
 ---@class zoxide.setupOpts
 ---@field lsd zoxide.setupOpts.lsd?
+---@field treeCommands string[][]?
+---@field treeCommand string[]?
 
 ---@alias lsdChoice "always"|"auto"|"never"|nil
 ---@class zoxide.setupOpts.lsd
