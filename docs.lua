@@ -17,6 +17,7 @@
 ---@field icon lsdChoice
 ---@field iconTheme "fancy"|"unicode"|nil
 ---@field depth integer?
+---@field groupDirs "first"|"last"|"none"|nil
 
 ---@class zoxide.setupOpts.tree
 ---@field depth integer?

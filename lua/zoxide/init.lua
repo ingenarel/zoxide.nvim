@@ -4,6 +4,7 @@ local m = {
         lsd = {
             iconTheme = "fancy",
             depth = 4,
+            groupDirs = "last",
         },
         tree = {
             depth = 4,
@@ -137,6 +138,7 @@ function m.setup(setupOpts)
                 "--icon=" .. setupOpts.lsd.icon,
                 "--icon-theme=" .. setupOpts.lsd.iconTheme,
                 "--depth=" .. string.format("%d", setupOpts.lsd.depth),
+                "--group-dirs=" .. setupOpts.lsd.groupDirs,
             },
             {
                 "tree",
