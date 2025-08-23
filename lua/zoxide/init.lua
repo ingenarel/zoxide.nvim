@@ -137,7 +137,7 @@ function m.setup(setupOpts)
             { "tree" },
             { "fd", "." },
         }
-    if setupOpts.treeCommand ~= nil then
+    if not setupOpts.treeCommand then
         for _, command in pairs(setupOpts.treeCommands) do
             if vim.fn.executable(command[1]) == 1 then
                 setupOpts.treeCommand = command
