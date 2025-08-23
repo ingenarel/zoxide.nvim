@@ -139,10 +139,12 @@ function m.setup(setupOpts)
             { "tree" },
             { "fd", "." },
         }
-    for _, command in pairs(setupOpts.treeCommands) do
-        if vim.fn.executable(command[1]) == 1 then
-            setupOpts.treecommand = command
-            break
+    if setupOpts.treecommand ~= nil then
+        for _, command in pairs(setupOpts.treeCommands) do
+            if vim.fn.executable(command[1]) == 1 then
+                setupOpts.treecommand = command
+                break
+            end
         end
     end
 end
