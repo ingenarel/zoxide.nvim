@@ -10,6 +10,9 @@ local m = {
         tree = {
             ignorePattern = ".git",
         },
+        fd = {
+            ignorePattern = ".git",
+        },
         treeCommands = nil,
         treeCommand = nil,
     },
@@ -17,6 +20,7 @@ local m = {
 
 m.setupOpts.lsd.depth = m.setupOpts.depth
 m.setupOpts.tree.depth = m.setupOpts.depth
+m.setupOpts.fd.depth = m.setupOpts.depth
 
 local function strip(str)
     str = string.gsub(str, "^%s+", "")
@@ -153,7 +157,13 @@ function m.setup(setupOpts)
                 "-I",
                 setupOpts.tree.ignorePattern,
             },
-            { "fd", "." },
+            {
+                "fd",
+                ".",
+                "--hidden",
+                "--exclude=" .. setupOpts.fd.ignorePattern,
+                "--max-depth=" .. setupOpts.fd.depth,
+            },
         }
     if not setupOpts.treeCommand then
         for _, command in pairs(setupOpts.treeCommands) do

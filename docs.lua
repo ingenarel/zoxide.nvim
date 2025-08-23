@@ -8,6 +8,7 @@
 ---@class zoxide.setupOpts
 ---@field lsd zoxide.setupOpts.lsd?
 ---@field tree zoxide.setupOpts.tree?
+---@field fd zoxide.setupOpts.tree?
 ---@field treeCommands string[][]?
 ---@field treeCommand string[]?
 ---@field depth integer?
@@ -22,5 +23,9 @@
 ---@field ignorePattern string?
 
 ---@class zoxide.setupOpts.tree
+---@field depth integer?
+---@field ignorePattern string?
+
+---@class zoxide.setupOpts.fd
 ---@field depth integer?
 ---@field ignorePattern string?
