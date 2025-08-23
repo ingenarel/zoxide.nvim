@@ -18,6 +18,7 @@
 ---@field iconTheme "fancy"|"unicode"|nil
 ---@field depth integer?
 ---@field groupDirs "first"|"last"|"none"|nil
+---@field ignorePattern string?
 
 ---@class zoxide.setupOpts.tree
 ---@field depth integer?

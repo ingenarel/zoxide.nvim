@@ -5,6 +5,7 @@ local m = {
             iconTheme = "fancy",
             depth = 4,
             groupDirs = "last",
+            ignorePattern = "",
         },
         tree = {
             depth = 4,
@@ -139,6 +140,7 @@ function m.setup(setupOpts)
                 "--icon-theme=" .. setupOpts.lsd.iconTheme,
                 "--depth=" .. string.format("%d", setupOpts.lsd.depth),
                 "--group-dirs=" .. setupOpts.lsd.groupDirs,
+                "-I=" .. setupOpts.lsd.ignorePattern,
             },
             {
                 "tree",
